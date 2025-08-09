@@ -1,0 +1,65 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+This is a Yazi configuration directory. Yazi is a terminal file manager written in Rust. This configuration includes custom keymaps, plugins, and visual enhancements to extend Yazi's functionality.
+
+## File Structure
+- `yazi.toml` - Main Yazi configuration (preview settings, file manager behavior)
+- `keymap.toml` - Custom key bindings and shortcuts 
+- `package.toml` - Plugin dependencies and version management
+- `init.lua` - Lua initialization script for plugin setup and status bar customizations
+- `plugins/` - Directory containing installed Yazi plugins
+
+## Key Plugins and Functionality
+
+### Essential Plugins
+- **fr.yazi** - Content search using ripgrep with fzf and bat preview (`<F3>`)
+- **smart-enter** - Intelligent enter behavior for files/directories (`l`, `<Enter>`)
+- **bookmarks** - Vi-like bookmark system (`bs` to save, `B` to jump, `bd` to delete)
+- **lazygit** - Git interface integration (`gi`)
+- **vcs-files** - Git file status viewer (`gc`)
+- **copy-file-contents** - Copy file contents to clipboard (`cF`)
+- **path-from-root** - Copy path from git root (`cr`)
+- **chmod** - File permission management (`cm`)
+
+### Custom Keybindings
+- `F` - Global file search using fd+fzf with bat preview
+- `!` - Open shell in current directory
+- `gr` - Navigate to git repository root
+- `<Backspace>` - Go up one level
+- `<Alt-Left>/<Alt-Right>` - Navigate back/forward in history
+- `<F3>` - Search file contents with ripgrep
+
+## Plugin Management
+Plugins are managed through `package.toml` with specific revisions and hashes. To update plugins:
+```bash
+ya pkg update
+```
+
+To add new plugins:
+```bash
+ya pkg add <plugin-repo>
+```
+
+## Configuration Files
+- **yazi.toml**: Preview settings, file associations, and plugin configurations
+- **keymap.toml**: All custom key bindings and plugin integrations  
+- **init.lua**: Lua setup for plugins and UI customizations like status bar extensions
+- **package.toml**: Plugin dependency management with version pinning
+
+## Dependencies
+External tools required for full functionality:
+- `bat` - Syntax highlighting for file previews
+- `fzf` - Fuzzy finder for search functionality  
+- `fd` - Fast file finder
+- `ripgrep` (rg) - Content search
+- `eza` - Modern ls replacement for directory previews
+- `lazygit` - Git interface
+
+## Status Bar Customizations
+The init.lua includes custom status bar elements:
+- Symlink target display
+- File owner/group information (Unix systems)
+- Full border UI with rounded corners

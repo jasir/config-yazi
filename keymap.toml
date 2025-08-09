@@ -60,7 +60,7 @@ desc = "Go forward"
 
 [[mgr.prepend_keymap]]
 on = [ "c", "F"]
-run = ["plugin copy-file-contents"]
+run = "plugin copy-file-contents"
 desc = "Copy contents of file"
 
 [[mgr.append_keymap]]
@@ -77,21 +77,74 @@ desc = "run lazygit"
 # bookmarks
 
 [[mgr.prepend_keymap]]
-on = [ "b", "s" ]
-run = "plugin bookmarks save"
-desc = "Save current position as a bookmark"
+on = "["
+run = "plugin whoosh jump_by_key"
+desc = "Jump bookmark by key"
+
+# Direct fuzzy search access
+[[mgr.prepend_keymap]]
+on = "}"
+run = "plugin whoosh fuzzy"
+desc = "Direct fuzzy search for bookmarks"
+
+# Basic bookmark operations
+[[mgr.prepend_keymap]]
+on = [ "]", "a" ]
+run = "plugin whoosh save"
+desc = "Add bookmark (hovered file/directory)"
 
 [[mgr.prepend_keymap]]
-on = [ "B" ]
-run = "plugin bookmarks jump"
-desc = "Jump to a bookmark"
+on = [ "]", "A" ]
+run = "plugin whoosh save_cwd"
+desc = "Add bookmark (current directory)"
+
+# Temporary bookmarks
+[[mgr.prepend_keymap]]
+on = [ "]", "t" ]
+run = "plugin whoosh save_temp"
+desc = "Add temporary bookmark (hovered file/directory)"
 
 [[mgr.prepend_keymap]]
-on = [ "b", "d" ]
-run = "plugin bookmarks delete"
-desc = "Delete a bookmark"
+on = [ "]", "T" ]
+run = "plugin whoosh save_cwd_temp"
+desc = "Add temporary bookmark (current directory)"
+
+# Jump to bookmarks
+[[mgr.prepend_keymap]]
+on = [ "]", "f" ]
+run = "plugin whoosh jump_by_fzf"
+desc = "Jump bookmark by fzf"
+
+# Delete bookmarks
+[[mgr.prepend_keymap]]
+on = [ "]", "d" ]
+run = "plugin whoosh delete_by_key"
+desc = "Delete bookmark by key"
 
 [[mgr.prepend_keymap]]
-on = [ "b", "D" ]
-run = "plugin bookmarks delete_all"
-desc = "Delete all bookmarks"
+on = [ "]", "D" ]
+run = "plugin whoosh delete_by_fzf"
+desc = "Delete bookmarks by fzf (use TAB to select multiple)"
+
+[[mgr.prepend_keymap]]
+on = [ "]", "C" ]
+run = "plugin whoosh delete_all"
+desc = "Delete all user bookmarks"
+
+# Rename bookmarks
+[[mgr.prepend_keymap]]
+on = [ "]", "r" ]
+run = "plugin whoosh rename_by_key"
+desc = "Rename bookmark by key"
+
+[[mgr.prepend_keymap]]
+on = [ "]", "R" ]
+run = "plugin whoosh rename_by_fzf"
+desc = "Rename bookmark by fzf"
+
+## VS CODE
+
+[[mgr.prepend_keymap]]
+on  = ["o"]
+run = "shell 'code \"$PWD\" \"$0\"' --block"
+desc = "Open current directory in VS Code"
