@@ -1,0 +1,21 @@
+# yazi.toml
+[mgr]
+show_hidden = true
+
+
+[preview.mime_rules]
+"text/*" = "bat --style=plain --color=always {file}"
+
+[preview]
+ext_rules = [
+  { ext = "md", mime = "text/markdown" }
+]
+
+[[plugin.prepend_previewers]]
+name = "*"
+run  = 'piper -- bat -p --color=always "$1"'
+
+[[plugin.prepend_previewers]]
+name = "*/"
+run  = 'piper -- eza -TL=3 --color=always --icons=always --group-directories-first --no-quotes "$1"'
+
