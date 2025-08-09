@@ -6,7 +6,7 @@ desc = "Search file by content (rg)"
 [[mgr.prepend_keymap]]
 on = ["F"]
 run = '''
-shell 'fd --type f . ~ | fzf --preview "bat --style=numbers --color=always {}" --height 80% --layout=reverse | xargs -r yazi' --block
+shell 'fd --type f . | fzf --preview "bat --style=numbers --color=always {}" --height 80% --layout=reverse | xargs -r yazi' --block
 '''
 desc = "Search file by name via fd+fzf"
 
@@ -148,3 +148,21 @@ desc = "Rename bookmark by fzf"
 on  = ["o"]
 run = "shell 'code \"$PWD\" \"$0\"' --block"
 desc = "Open current directory in VS Code"
+
+# find by char
+
+[[mgr.prepend_keymap]]
+on   = "`"
+run  = "plugin jump-to-char"
+desc = "Jump to char"
+
+
+[[mgr.prepend_keymap]]
+on   = "t"
+run  = "plugin smart-tab"
+desc = "Create a tab and enter the hovered directory"
+
+[[mgr.prepend_keymap]]
+on = ["C"]
+run = "plugin ouch"
+desc = "Compress with ouch"

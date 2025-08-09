@@ -102,3 +102,7 @@ require("whoosh"):setup {
   history_fzf_path_truncate_long_names_enabled = false, -- Enable/disable long folder name truncation for history
   history_fzf_path_max_folder_name_length = 30,         -- Maximum length for folder names in history (default 30)
 }
+
+
+require("folder-rules"):setup()
+

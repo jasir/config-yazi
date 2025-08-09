@@ -63,5 +63,15 @@ use = "WhoSowSee/whoosh"
 rev = "49dd966"
 hash = "aab29d8dd949b4802c08598a0ee96d2"
 
+[[plugin.deps]]
+use = "yazi-rs/plugins:jump-to-char"
+rev = "de53d90"
+hash = "d2f04875bbd4ed3dd5696e8c4b094fde"
+
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "0742fff"
+hash = "2bd799b42b8e42b8ef100310be71f8d1"
+
 [flavor]
 deps = []
