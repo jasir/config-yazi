@@ -63,3 +63,34 @@ The init.lua includes custom status bar elements:
 - Symlink target display
 - File owner/group information (Unix systems)
 - Full border UI with rounded corners
+
+## Default Configuration Sources
+Yazi's default configurations are not stored locally but are embedded in the binary. The source files can be found on GitHub:
+
+### Default Keymap
+- **Location**: https://github.com/sxyazi/yazi/blob/shipped/yazi-config/preset/keymap-default.toml
+- **All presets**: https://github.com/sxyazi/yazi/tree/shipped/yazi-config/preset/
+  - `keymap-default.toml` - Default keyboard shortcuts
+  - `yazi-default.toml` - Default application settings
+  - `theme-default.toml` - Default theme configuration
+
+### Viewing Complete Keymap
+- **In Yazi**: Press `F1` or `~` to open help menu with all keybindings
+- **Filter keys**: Type in help menu to filter specific shortcuts
+- **Exit help**: Press `Esc` to close help or clear filter
+- **Documentation**: https://yazi-rs.github.io/docs/configuration/keymap/
+
+Note: Yazi uses the "shipped" branch for distributed default configurations that are part of the released version.
+
+## Local Default Configuration Files
+Default configuration files have been downloaded to this directory for reference:
+- `keymap-default.toml` - Complete default keyboard shortcuts
+- `yazi-default.toml` - Default application settings
+- `theme-dark.toml` - Default dark theme configuration
+- `theme-light.toml` - Default light theme configuration
+
+These files can be used for:
+- Comparing current settings with defaults
+- Restoring default behavior for specific features
+- Understanding all available configuration options
+- Creating new custom configurations based on defaults
