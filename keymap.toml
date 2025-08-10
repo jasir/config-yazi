@@ -166,3 +166,9 @@ desc = "Create a tab and enter the hovered directory"
 on = ["C"]
 run = "plugin ouch"
 desc = "Compress with ouch"
+
+# [[mgr.prepend_keymap]]
+# on   = "f"
+# run  = "plugin smart-filter"
+# desc = "Smart filter"
+

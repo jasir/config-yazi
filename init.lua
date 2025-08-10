@@ -48,8 +48,9 @@ require("copy-file-contents"):setup({
 local bookmarks = {
   { tag = "Desktop", path = "~/Desktop", key = { "d", "D" } },
   { tag = "Documents", path = "~/Documents", key = { "d", "d" } },
-  { tag = "Downloads", path = "~/Downloads", key = { "o" },
-}}
+  { tag = ".claude", path = "~/.claude", key = { "c" } },
+  { tag = "brain", path = "/c/work/projects/altisima-central-vault/__home/projects/ai/brain/", key = { "b" } },
+}
 
 
 -- Windows-specific bookmarks
