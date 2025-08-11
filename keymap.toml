@@ -38,9 +38,10 @@ run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'
 desc = "Go to root of git repository"
 
 [[mgr.prepend_keymap]]
-on   = [ "g", "c" ]
+on   = [ "g", "C" ]
 run  = "plugin vcs-files"
 desc = "Show Git file changes"
+
 
 [[mgr.append_keymap]]
 on   = [ "c", "m" ]
@@ -70,9 +71,26 @@ desc = "Copies path from git root"
 
 
 [[mgr.prepend_keymap]]
-on   = [ "g", "i" ]
+on   = [ "g", "g" ]
 run  = "plugin lazygit"
 desc = "run lazygit"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "c" ]
+run  = "cd ~/.claude"
+desc = "~/.claude"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "b" ]
+run  = "cd /c/work/projects/altisima-central-vault/__home/projects/ai/brain/"
+desc = "Go to brain directory"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "b" ]
+run  = "cd /c/work/projects/altisima-central-vault/__home/projects/ai/brain/"
+desc = "Go to brain directory"
+
+
 
 # bookmarks
 
