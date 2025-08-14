@@ -94,3 +94,4 @@ These files can be used for:
 - Restoring default behavior for specific features
 - Understanding all available configuration options
 - Creating new custom configurations based on defaults
+- note for using piper plugin
