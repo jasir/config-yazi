@@ -39,8 +39,8 @@ extract = [
 ]
 
 [open]
-rules = [
-    # Text files
+prepend_rules = [
+    # Text files - přidání vlastních editorů k výchozím
     { mime = "text/*", use = [ "nvim", "nano", "code" ] },
     { name = "*.md", use = [ "nvim", "nano", "code" ] },
     { name = "*.toml", use = [ "nvim", "nano", "code" ] },
@@ -50,15 +50,17 @@ rules = [
     { name = "*.py", use = [ "nvim", "nano", "code" ] },
     { name = "*.js", use = [ "nvim", "nano", "code" ] },
     { name = "*.ts", use = [ "nvim", "nano", "code" ] },
-    
-    # Images
+]
+
+append_rules = [
+    # Images - přidání vlastních prohlížečů
     { mime = "image/*", use = [ "feh" ] },
     
-    # Videos
+    # Videos - přidání vlastních přehrávačů
     { mime = "video/*", use = [ "mpv", "vlc" ] },
     
     # HTML files
-    { name = "*.html", use = [ "firefox", "nvim", "nano", "code" ] },
+    { name = "*.html", use = [ "firefox" ] },
     
     # Archives
     { mime = "application/*zip", use = [ "extract" ] },
