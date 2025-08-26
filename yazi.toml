@@ -12,9 +12,6 @@ ext_rules = [
 
 [plugin]
 prepend_previewers = [	
-	# Images - ASCII art display (more reliable than direct image protocols)
-	{ mime = "image/*", run = 'piper -- chafa --size=${w}x${h} --animate=off "$1" 2>/dev/null || viu -w ${w} "$1" 2>/dev/null || file -b "$1"' },
-	
 	# PDF files - text preview
 	{ mime = "application/pdf", run = 'piper -- pdftotext -l 3 "$1" - 2>/dev/null || file -b "$1"' },
 	
@@ -58,7 +55,10 @@ prepend_previewers = [
 	# Directory previewer  
 	{ name = "*/", run = 'piper -- eza -TL=3 --color=always --icons=always --group-directories-first --no-quotes "$1"' },
 
-	# Default file previewer - bat for text files, file info for everything else
-	{ name = "*", run = 'piper -- bat -p --color=always "$1" 2>/dev/null || file -b "$1"' },
+]
 
+# Fallback for unrecognized files - append instead of prepend to not override built-in image preview
+append_previewers = [
+	# Binary files fallback - show file info instead of bat warnings
+	{ name = "*", run = 'piper -- (file -b "$1" | grep -qi "text\\|script\\|source" && bat -p --color=always "$1" || file -b "$1")' },
 ]

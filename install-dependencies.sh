@@ -21,7 +21,8 @@ sudo apt install -y \
     poppler-utils \
     pandoc \
     file \
-    dpkg-dev
+    dpkg-dev \
+    ueberzug
 
 # Additional useful tools (optional but recommended)
 echo "🎨 Installing additional preview utilities..."
@@ -85,6 +86,9 @@ check_tool "pdftotext"
 check_tool "pandoc"
 check_tool "file"
 
+# Image display support
+check_tool "ueberzugpp"
+
 # Kitty image support test
 if command -v kitten &> /dev/null; then
     echo "✅ kitten - installed"
@@ -109,7 +113,7 @@ echo "----------------------------------------"
 echo "🎉 Setup complete! Restart Yazi to use enhanced previews."
 echo ""
 echo "📖 New preview features:"
-echo "   🖼️  Images: Direct display in Kitty terminal"
+echo "   🖼️  Images: Built-in Yazi support (Kitty/X11)"
 echo "   📄 PDF: Text preview (first 3 pages)"
 echo "   🌐 HTML: Clean text output"
 echo "   📝 DOC/DOCX: Plain text conversion"
