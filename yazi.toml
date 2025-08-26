@@ -25,8 +25,6 @@ prepend_previewers = [
 	# Markdown with glow via piper
 	{ name = "*.md", run = 'piper -- ~/go/bin/glow -s auto "$1"' },
 	
-	# SVG preview - convert to PNG and display via Kitty
-	{ mime = "image/svg+xml", run = 'rsvg-convert "$1" -o /tmp/yazi_svg_preview.png && kitty +kitten icat /tmp/yazi_svg_preview.png' },
 	
 	# DOC/DOCX files - convert to markdown and display with glow
 	{ mime = "application/msword", run = 'piper -- (pandoc "$1" -t gfm --wrap=auto 2>/dev/null | ~/go/bin/glow -s auto) || (antiword "$1" 2>/dev/null | ~/go/bin/glow -s auto) || echo "Nelze načíst DOC soubor"' },
