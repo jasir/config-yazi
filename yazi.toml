@@ -11,16 +11,10 @@ ext_rules = [
 ]
 
 [plugin]
-prepend_previewers = [	
-	# PDF files - text preview
-	{ mime = "application/pdf", run = 'piper -- pdftotext -l 3 "$1" - 2>/dev/null || file -b "$1"' },
-	
-	# HTML files - clean text output
+# ASCII art image preview - force use of text-based image viewers
+prepend_previewers = [
+	# HTML files - clean text output (keep custom)
 	{ mime = "text/html", run = 'piper -- w3m -dump "$1" 2>/dev/null || lynx -dump "$1" 2>/dev/null || cat "$1"' },
-	
-	# DOC/DOCX files
-	{ mime = "application/msword", run = 'piper -- pandoc "$1" -t plain 2>/dev/null || file -b "$1"' },
-	{ mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document", run = 'piper -- pandoc "$1" -t plain 2>/dev/null || file -b "$1"' },
 	
 	# Binary executable files - file info summary
 	{ mime = "application/x-executable", run = 'piper -- file -b "$1"' },
@@ -29,7 +23,6 @@ prepend_previewers = [
 	{ mime = "application/octet-stream", run = 'piper -- file -b "$1"' },
 
 	# Markdown with glow via piper
-	# Options: -s auto/dark/light, -w width, -p pager mode
 	{ name = "*.md", run = 'piper -- ~/go/bin/glow -s auto "$1"' },
 	
 	# Archive previewer
@@ -57,7 +50,7 @@ prepend_previewers = [
 
 ]
 
-# Fallback for unrecognized files - append instead of prepend to not override built-in image preview
+# Binary files fallback - show file info instead of bat warnings
 append_previewers = [
 	# Binary files fallback - show file info instead of bat warnings
 	{ name = "*", run = 'piper -- (file -b "$1" | grep -qi "text\\|script\\|source" && bat -p --color=always "$1" || file -b "$1")' },
