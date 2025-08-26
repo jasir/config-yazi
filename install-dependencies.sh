@@ -30,7 +30,8 @@ echo "🎨 Installing additional preview utilities..."
 # Image tools (alternatives to kitten icat)
 sudo apt install -y \
     chafa \
-    imagemagick
+    imagemagick \
+    librsvg2-bin
 
 # Development and analysis tools
 sudo apt install -y \
@@ -108,12 +109,14 @@ check_tool "viu"
 check_tool "hexyl"
 check_tool "mediainfo"
 check_tool "exiftool"
+check_tool "rsvg-convert"
 
 echo "----------------------------------------"
 echo "🎉 Setup complete! Restart Yazi to use enhanced previews."
 echo ""
 echo "📖 New preview features:"
 echo "   🖼️  Images: Built-in Yazi support (Kitty/X11)"
+echo "   🎨 SVG: Vector graphics preview (via rsvg-convert)"
 echo "   📄 PDF: Text preview (first 3 pages)"
 echo "   🌐 HTML: Clean text output"
 echo "   📝 DOC/DOCX: Plain text conversion"
