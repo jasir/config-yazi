@@ -193,3 +193,15 @@ desc = "Compress with ouch"
 # run  = "plugin smart-filter"
 # desc = "Smart filter"
 
+## EDITORS
+
+[[mgr.prepend_keymap]]
+on = ["v"]
+run = "shell 'nvim \"$0\"' --block"
+desc = "Open with nvim"
+
+[[mgr.prepend_keymap]]
+on = ["n"]
+run = "shell 'nano \"$0\"' --block"
+desc = "Open with nano"
+

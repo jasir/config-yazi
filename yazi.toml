@@ -3,6 +3,69 @@
 # show_hidden = true
 ratio = [1,3,4]
 
+[opener]
+# Text editors
+nvim = [
+    { run = 'nvim "$@"', block = true, desc = "Open with Neovim" }
+]
+nano = [
+    { run = 'nano "$@"', block = true, desc = "Open with Nano" }
+]
+code = [
+    { run = 'code "$@"', orphan = true, desc = "Open with VS Code" }
+]
+
+# Image viewers
+feh = [
+    { run = 'feh "$@"', orphan = true, desc = "Open with feh" }
+]
+
+# Video players  
+vlc = [
+    { run = 'vlc "$@"', orphan = true, desc = "Open with VLC" }
+]
+mpv = [
+    { run = 'mpv "$@"', orphan = true, desc = "Open with mpv" }
+]
+
+# Web browsers
+firefox = [
+    { run = 'firefox "$@"', orphan = true, desc = "Open with Firefox" }
+]
+
+# Archive managers
+extract = [
+    { run = 'ouch decompress "$@"', desc = "Extract with ouch" }
+]
+
+[open]
+rules = [
+    # Text files
+    { mime = "text/*", use = [ "nvim", "nano", "code" ] },
+    { name = "*.md", use = [ "nvim", "nano", "code" ] },
+    { name = "*.toml", use = [ "nvim", "nano", "code" ] },
+    { name = "*.json", use = [ "nvim", "nano", "code" ] },
+    { name = "*.lua", use = [ "nvim", "nano", "code" ] },
+    { name = "*.rs", use = [ "nvim", "nano", "code" ] },
+    { name = "*.py", use = [ "nvim", "nano", "code" ] },
+    { name = "*.js", use = [ "nvim", "nano", "code" ] },
+    { name = "*.ts", use = [ "nvim", "nano", "code" ] },
+    
+    # Images
+    { mime = "image/*", use = [ "feh" ] },
+    
+    # Videos
+    { mime = "video/*", use = [ "mpv", "vlc" ] },
+    
+    # HTML files
+    { name = "*.html", use = [ "firefox", "nvim", "nano", "code" ] },
+    
+    # Archives
+    { mime = "application/*zip", use = [ "extract" ] },
+    { mime = "application/x-tar", use = [ "extract" ] },
+    { mime = "application/x-7z-compressed", use = [ "extract" ] },
+]
+
 [preview.mime_rules]
 
 [preview]

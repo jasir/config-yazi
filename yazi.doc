@@ -1,0 +1,829 @@
+# yazi.toml
+info
+If you want to fine-tune the default settings, the first step is to create your own configuration file.
+
+[mgr]
+ratio
+Manager layout by ratio, 3-element array. For example:
+
+[1, 4, 3]: 1/8 width for parent, 4/8 width for current, 3/8 width for preview
+Set the value to 0 to hide the corresponding panel, but at least one panel must be visible (non-zero).
+
+sort_by
+File sorting method.
+
+"none": Don't sort.
+"mtime": Sort by last modified time.
+"btime": Sort by birth time.
+"extension": Sort by file extension.
+"alphabetical": Sort alphabetically, e.g. 1.md < 10.md < 2.md
+"natural": Sort naturally, e.g. 1.md < 2.md < 10.md
+"size": Sort by file size.
+"random": Sort randomly.
+sort_sensitive
+Sort case-sensitively.
+
+true: Case-sensitive
+false: Case-insensitive
+sort_reverse
+Display files in reverse order.
+
+true: Reverse order
+false: Normal order
+sort_dir_first
+Display directories first.
+
+true: Directories first
+false: Normal order
+sort_translit
+Transliterate filenames for sorting (i.e. replaces Â as A, Æ as AE, etc.), only available if sort_by = "natural".
+
+This is useful for files that contain Hungarian characters.
+
+true: Enabled
+false: Disabled
+linemode
+Line mode: display information associated with the file on the right side of the file list row.
+
+"none": No line mode.
+"size": Display the size in bytes of the file. Note that currently directory sizes are only evaluated when sort_by = "size", and this might change in the future.
+"btime": Display the birth time of the file.
+"mtime": Display the last modified time of the file.
+"permissions": Display the permissions of the file, only available on Unix-like systems.
+"owner": Display the owner of the file, only available on Unix-like systems.
+You can also specify any 1 to 20 characters, and extend it within a UI plugin, which means you can implement your own linemode through the plugin system like this:
+
+# ~/.config/yazi/yazi.toml
+[mgr]
+linemode = "size_and_mtime"
+
+-- ~/.config/yazi/init.lua
+function Linemode:size_and_mtime()
+	local time = math.floor(self._file.cha.mtime or 0)
+	if time == 0 then
+		time = ""
+	elseif os.date("%Y", time) == os.date("%Y") then
+		time = os.date("%b %d %H:%M", time)
+	else
+		time = os.date("%b %d  %Y", time)
+	end
+
+	local size = self._file:size()
+	return string.format("%s %s", size and ya.readable_size(size) or "-", time)
+end
+
+show_hidden
+Show hidden files.
+
+true: Show
+false: Do not show
+show_symlink
+Show the path of the symlink file point to, after the filename.
+
+true: Show
+false: Do not show
+scrolloff
+The number of files to keep above and below the cursor when moving through the file list.
+
+If the value is larger than half the screen height (e.g. 200), the cursor will be centered.
+
+mouse_events
+Array of strings, the types of mouse events can be received by the plugin system, available values:
+
+"click": Mouse click
+"scroll": Mouse vertical scroll
+"touch": Mouse horizontal scroll
+"move": Mouse move
+"drag": Mouse drag (Some terminals do not support this)
+Usually, you don't need to change it, unless the plugin you're using requires enabling a certain event.
+
+title_format
+The terminal title format, which is a string with the following placeholders available:
+
+{cwd} - current working directory
+If you don't want Yazi to automatically update the title, set it to an empty string ("").
+
+[preview]
+wrap
+Wrap long lines in the code preview.
+
+"yes": Enable word wrap
+"no": Disable word wrap
+tab_size
+The width of a tab character (\t) in spaces.
+
+max_width
+Maximum preview width for images. Do a yazi --clear-cache to take effect after changing this.
+
+This value is also used for preloading images; the larger it is, the larger the image cache generated, which consumes more CPU.
+
+max_height
+Maximum preview height for images. Do a yazi --clear-cache to take effect after changing this.
+
+This value is also used for preloading images; the larger it is, the larger the image cache generated, which consumes more CPU.
+
+cache_dir
+The system cache directory is used by default, and the cached files will go away on a reboot automatically.
+
+If you want to make it more persistent, you can specify the cache directory manually as an absolute path.
+
+image_delay
+Wait for at least the specified milliseconds before starting to send image preview data to the terminal.
+
+This is to alleviate lag caused by some terminal emulators struggling to render images Yazi sent in time, when users scroll through the file list quickly.
+
+See https://github.com/sxyazi/yazi/pull/1512 for more information.
+
+image_filter
+The filter used on image downscaling, available values:
+
+"nearest" - Nearest Neighbor
+"triangle" - Linear Triangle
+"catmull-rom" - Catmull-Rom
+"lanczos3" - Lanczos with window 3
+They are arranged in order from fast to slow, and from poor to good quality - Lanczos3 provides the highest quality but is also the slowest.
+
+See the example and benchmark here: https://docs.rs/image/0.24.8/image/imageops/enum.FilterType.html#examples
+
+image_quality
+Quality on pre-caching images, range 50-90.
+
+The larger value, the better image quality, but slower with more CPU consumption, and generates larger cache files that occupy more storage space.
+
+ueberzug_scale / ueberzug_offset
+ueberzug_scale (Float): Ueberzug image scaling ratio, scale>1 for enlargement, scale<1 for reduction. For example, 0.5 indicates a reduction to half.
+ueberzug_offset ([x, y, width, height]): Ueberzug image offset, in cell units. For example, [0.5, 0.5, -0.5, -0.5] indicates that the image is offset by half a cell in both directions, and the width and height are reduced by half a cell.
+This is useful for solving a bug of Überzug++ image size calculation.
+
+If your monitor has a 2.0 scale factor, and is running on Wayland under Hyprland, you may need to set ueberzug_scale: 0.5, and adjust the value of ueberzug_offset according to your case, to offset this issue.
+
+[opener]
+Configure available openers that can be used in [open], for example:
+
+[opener]
+play = [
+	{ run = 'mpv "$@"', orphan = true, for = "unix" },
+	{ run = '"C:\Program Files\mpv.exe" %*', orphan = true, for = "windows" }
+]
+edit = [
+	{ run = '$EDITOR "$@"', block = true, for = "unix" },
+	{ run = "%EDITOR% %*",  block = true, for = "windows" },
+]
+open = [
+	{ run = 'xdg-open "$@"', desc = "Open" },
+]
+# ...
+
+Available options are as follows:
+
+run: The command to open the selected files, with the following variables available:
+$n (Unix) / %n (Windows): The N-th selected file, starting from 1. e.g. $2 represents the second selected file.
+$@ (Unix) / %* (Windows): All selected files, i.e. $1, $2, ..., $n.
+$0 (Unix) / %0 (Windows): The hovered file.
+Note that, these variables follow platform-specific differences. For example, Unix shell requires wrapping $ with quotes, while % in Windows batch scripts doesn't. Refer to the documentation of sh and cmd.exe for details.
+block: Open in a blocking manner. After setting this, Yazi will hide into a secondary screen and display the program on the main screen until it exits. During this time, it can receive I/O signals, which is useful for interactive programs.
+orphan: Keep the process running even if Yazi has exited, once specified, the process will be detached from the task scheduling system.
+desc: Description of the opener, display in interactive components, such as "Open with" and help menu.
+for: The opener is only available on this system; if not specified, it's available on all systems. Available values:
+unix: Linux and macOS
+windows: Windows
+linux: Linux
+macos: macOS
+android: Android (Termux)
+[open]
+Set rules for opening specific files. You can prepend or append rules to the default through prepend_rules and append_rules (See Configuration mixing for details):
+
+[open]
+prepend_rules = [
+	{ name = "*.json", use = "edit" },
+
+	# Multiple openers for a single rule
+	{ name = "*.html", use = [ "open", "edit" ] },
+]
+append_rules = [
+	{ name = "*", use = "my-fallback" },
+]
+
+If your append_rules contains wildcard rules, they will always take precedence over the default wildcard rules as the fallback.
+
+Or, use rules to rewrite the entire default rules:
+
+[open]
+rules = [
+	{ mime = "text/*", use = "edit" },
+	{ mime = "video/*", use = "play" },
+
+	# { mime = "application/json", use = "edit" },
+	{ name = "*.json", use = "edit" },
+
+	# Multiple openers for a single rule
+	{ name = "*.html", use = [ "open", "edit" ] },
+]
+
+Available rule options are as follows:
+
+name: Glob expression for matching the file name. Case-insensitive by default, add \s to the beginning to make it sensitive.
+mime: Glob expression for matching the mime-type. Case-insensitive by default, add \s to the beginning to make it sensitive.
+use: Opener name corresponding to the names in the [opener] section.
+With that:
+
+You can spot on a file to check it's mime-type with the default Tab key.
+If use is an array containing multiple openers, all commands in these openers will be merged. open will run the first of these commands; open --interactive will list all of these commands in the "open with" menu.
+[tasks]
+micro_workers
+Maximum number of concurrent micro-tasks.
+
+macro_workers
+Maximum number of concurrent macro-tasks.
+
+bizarre_retry
+Maximum number of retries when a bizarre failure occurs.
+
+suppress_preload
+Exclude the preload tasks created by the system from the task list, do not report their progress, and do not consider them on app exit confirming.
+
+image_alloc
+Maximum memory allocation limit in bytes for decoding a single image, 0 for unlimited.
+
+image_bound
+An array of [width, height], maximum image size (in pixels) for decoding a single image, and 0 for unlimited.
+
+[plugin]
+fetchers
+warning
+Fetchers are not complete yet, and the API is subject to change without prior notice!
+
+TODO
+
+You can prepend or append new fetchers to the default fetchers under [plugin] by prepend_fetchers and append_fetchers, see Configuration mixing for details. Here are the available options for a single rule:
+
+id (String): Fetcher's ID.
+name (String): Glob expression for matching the file name. Case-insensitive by default, add \s to the beginning to make it sensitive.
+run (String): The name of the Lua plugin to be run.
+if (String): Execute the fetcher based on this condition.
+prio (String): The priority of the task. One of high, normal or low.
+previewers
+You can prepend or append new preview rules to the default previewers under [plugin] by prepend_previewers and append_previewers, see Configuration mixing for details. Here are the available options for a single rule:
+
+name (String): Glob expression for matching the file name. Case-insensitive by default, add \s to the beginning to make it sensitive.
+mime (String): Glob expression for matching the mime-type. Case-insensitive by default, add \s to the beginning to make it sensitive.
+run (String): The name of the Lua plugin to be run.
+[plugin]
+prepend_previewers = [
+	# HEIC previewer
+	{ mime = "image/heic", run = "heic" },
+	# RAF previewer
+	{ name = "*.raf", run = "raf" },
+]
+
+append_previewers = [
+	# My fallback previewer
+	{ name = "*", run = "binary" },
+]
+
+If your append_previewers contains wildcard name rules ("*" or "*/"), they will always take precedence over the default wildcard rules as the fallback.
+
+Yazi comes with the these previewer plugins:
+
+folder: bridge between the Yazi filesystem and the preview
+code: bridge between built-in code highlighting and the preview, providing async concurrent rendering
+json: bridge between jq and the preview, providing async concurrent rendering
+noop: no operation
+image: presentation layer of built-in image preview, offering mixed preview capabilities
+video: bridge between ffmpeg and the preview, offering mixed preview capabilities
+pdf: bridge between pdftoppm and the preview, offering mixed preview capabilities
+archive: bridge between 7-Zip and the preview, offering mixed preview and concurrent rendering capabilities
+If you want to create your own previewer, see Previewer API.
+
+preloaders
+You can prepend or append new preview rules to the default preloaders under [plugin] by prepend_preloaders and append_preloaders, see Configuration mixing for details. Here are the available options for a single rule:
+
+name (String): Glob expression for matching the file name. Case-insensitive by default, add \s to the beginning to make it sensitive.
+mime (String): Glob expression for matching the mime-type. Case-insensitive by default, add \s to the beginning to make it sensitive.
+cond (String): Conditional expression – Only rules that meet this condition and satisfy either the name or mime will be applied. For example, A & B means A and B, and A | !B means A or not B. Here are the available factors:
+mime: This file has a mime-type.
+run (String): The name of the Lua plugin to be run.
+prio (String): Preload priority, low, normal or high. The default is normal if not specified.
+[plugin]
+prepend_preloaders = [
+	# HEIC preloader
+	{ mime = "image/heic", run = "heic" },
+]
+
+Yazi comes with the these preloader plugins:
+
+mime: preloads mime-type of files in chunks
+noop: no operation
+image: preloads and caches images
+video: preloads and caches videos
+pdf: preloads and caches PDFs.
+If you want to create your own preloader, see Preloader API.
+
+[input]
+cursor_blink
+Control the cursor blinking.
+
+true: Blink.
+false: Do not blink.
+You can customize the title and position of each input. There are following inputs: cd, create, rename, filter, find, search and shell. To change their configuration use the underscore between the name and the option, like cd_origin.
+
+As for position, it consists of two parts: Origin and Offset. The origin is the top-left corner of the input, and the offset is the increment from this origin. Together, they determine the area of the input on the screen.
+
+Origin
+See Origin for available values.
+
+Offset
+As for the offset, it's a 4-element tuple: (x, y, width, height).
+
+Placeholder
+Some inputs have special placeholders that will be replaced with actual content on display:
+
+cd_title: String
+
+Title of the cd --interactive input used to enter the target path.
+
+create_title: [String, String]
+
+It's a tuple of 2-element: first for create input title, second for create --dir command.
+
+rename_title: String
+
+Title of the rename input used to enter the new name.
+
+filter_title: String
+
+Title of the filter input used to enter the keyword.
+
+find_title: [String, String]
+
+It's a tuple of 2-element: first for find, second for find --previous.
+
+search_title: String
+
+{n}: Name of the current search engine.
+shell_title: [String, String]
+
+It's a tuple of 2-element: first for shell --interactive, second for shell --interactive --block.
+
+[confirm]
+Same as the [input] section. There are a few available: trash, delete, overwrite and quit.
+
+[pick]
+Same as the [input] section. Available selectors: open.
+
+[which]
+sort_by
+Candidate sorting method.
+
+"none": Don't sort.
+"key": Sort by key.
+"desc: Sort by description.
+sort_sensitive
+Sort case-sensitively.
+
+true: Case-sensitive
+false: Case-insensitive
+sort_reverse
+Display candidates in reverse order.
+
+true: Reverse order
+false: Normal order
+sort_translit
+Transliterate filenames for sorting, i.e. replaces Â as A, Æ as AE, etc.
+
+This is useful for files that contain Hungarian characters.
+
+true: Enabled
+false: Disabled
+
+
+Plugins (BETA)
+You can extend Yazi's functionality through Lua plugins, which need to be placed in the plugins subdirectory of Yazi's configuration directory, so either:
+
+~/.config/yazi/plugins/ on Unix-like systems.
+%AppData%\yazi\config\plugins\ on Windows.
+~/.config/yazi/
+├── init.lua
+├── plugins/
+│   ├── foo.yazi/
+│   └── bar.yazi/
+└── yazi.toml
+
+Each plugin is a directory with a kebab-case name, ending in .yazi, and containing at least the following files:
+
+~/.config/yazi/plugins/bar.yazi/
+├── main.lua
+├── README.md
+└── LICENSE
+
+Where:
+
+main.lua is the entry point of this plugin.
+README.md is the documentation of this plugin.
+LICENSE is the license file for this plugin.
+Usage
+A plugin has two usages:
+
+Functional plugin: Bind the plugin command to a key in keymap.toml, and activate it by pressing the key.
+Custom previewers, preloaders: Configure them as previewers or preloaders under [plugin] of your yazi.toml.
+Functional plugin
+You can bind a plugin command to a specific key in your keymap.toml with:
+
+Argument/Option	Description
+[name]	Required, the name of the plugin to run.
+[args]	Optional, shell-style arguments passed to the plugin.
+For example, plugin test -- foo --bar --baz=qux will run the test plugin with the arguments foo --bar --baz=qux in an async context.
+
+To access the arguments in the plugin, use job.args:
+
+-- ~/.config/yazi/plugins/test.yazi/main.lua
+return {
+	entry = function(self, job)
+		ya.dbg(job.args[1])  -- "foo"
+		ya.dbg(job.args.bar) -- true
+		ya.dbg(job.args.baz) -- "qux"
+	end,
+}
+
+Note that currently Yazi only supports positional arguments (foo) and named arguments (--bar), it does not support shorthand arguments like -a.
+
+Shorthands will be treated as positional arguments at the moment, but as Yazi adds support for it in the future, their behavior will change. So please avoid using them to prevent any potential conflicts.
+
+Sync vs Async
+The plugin system is designed with an async-first philosophy. Therefore, unless specifically specified, such as the @sync annotation, all plugins run in an async context.
+
+There is one exception: the user's init.lua is synchronous, since init.lua is often used to initialize plugin configurations:
+
+-- ~/.config/yazi/init.lua
+require("my-plugin"):setup {
+	key1 = "value1",
+	key2 = "value2",
+	-- ...
+}
+
+-- ~/.config/yazi/plugins/my-plugin.yazi/main.lua
+return {
+	setup = function(state, opts)
+		-- Save the user configuration to the plugin's state
+		state.key1 = opts.key1
+		state.key2 = opts.key2
+	end,
+}
+
+Sync context
+The sync context accompanies the entire app lifecycle, which is active during UI rendering (UI plugins), and on executing sync functional plugins.
+
+For better performance, the sync context is created only at the app's start and remains singular throughout. Thus, plugins running within this context share states, prompting plugin developers to use plugin-specific state persistence for their plugins to prevent global space contamination:
+
+--- @sync entry
+-- ~/.config/yazi/test.yazi/main.lua
+return {
+  entry = function(state)
+    state.i = state.i or 0
+    ya.dbg("i = " .. state.i)
+
+    state.i = state.i + 1
+  end,
+}
+
+Yazi initializes the state for each sync plugin before running, and it exists independently for them throughout the entire lifecycle. Do the plugin test three times, and you will see the log output:
+
+i = 0
+i = 1
+i = 2
+
+Async context
+When a plugin is executed asynchronously, an isolated async context is created for it automatically.
+
+In this context, you can use all the async functions supported by Yazi, and it operates concurrently with the main thread, ensuring that the main thread is not blocked.
+
+You can also obtain a small amount of data from the sync context by calling a "sync block":
+
+-- ~/.config/yazi/plugins/my-async-plugin.yazi/main.lua
+local set_state = ya.sync(function(state, a)
+	-- You can get/set the state of the plugin through `state` parameter
+	-- in the `sync()` block
+	state.a = a
+end)
+
+local get_state = ya.sync(function(state, b)
+	-- You can access all states through the `cx`,
+	-- within the `sync()` block, in an async plugin
+	local h = cx.active.current.hovered
+	return h and state.a .. tostring(h.url) or b
+end)
+
+return {
+	entry = function()
+		set_state("hello from a")
+		local h = get_state("hello from b")
+		-- Do some time-consuming work, such as reading file, network request, etc.
+		-- It will execute concurrently with the main thread
+	end,
+}
+
+Note that ya.sync() call must be at the top level:
+
+-- Wrong !!!
+local get_state
+if some_condition then
+	get_state = ya.sync(function(state)
+		-- ...
+	end)
+end
+
+Passing data into and returning data from a ya.sync() block involves cross-thread data exchange. If the data contains userdata, it causes Ownership transfer.
+
+Annotations
+Each plugin can contain zero or more annotations that specify the behavior of the plugin during runtime.
+
+Each annotation starts with ---, followed by @ and the annotation name, and ends with the annotation's value.
+
+These annotations must be at the very top of the file, with no content before them, and no non-annotation content should appear between annotations.
+
+@sync
+Specifies that a method in the plugin runs in a sync context instead of the default async context. Available values:
+
+entry: Run the entry method in a sync context.
+peek: Run the peek method in a sync context.
+For example:
+
+--- @sync entry
+return {
+	entry = function() end
+}
+
+@since
+Specifies the minimum Yazi version that the plugin supports.
+
+If specified, and the user's Yazi version is lower than the specified one, an error will be triggered to prompt the user to upgrade their Yazi version, preventing the plugin from being executed accidentally:
+
+--- @since 25.2.13
+return {
+	--- ...
+}
+
+Interface
+Previewer
+A previewer needs to return a table that implements the peek and seek methods. Both methods take a table parameter job and do not return any values:
+
+local M = {}
+
+function M:peek(job)
+	-- ...
+end
+
+function M:seek(job)
+	-- ...
+end
+
+return M
+
+When the user presses j or k to switch between hovering files, peek is called, with:
+
+Key	Description
+area	Rect of the available preview area.
+args	Arguments passed to the previewer.
+file	File to be previewed.
+skip	Number of units to skip. The units depend on your previewer, such as lines for code and percentages for videos.
+When the user presses J or K to scroll the preview of the file, seek is called, with:
+
+Key	Description
+file	File being scrolled.
+area	Rect of the available preview area.
+units	Number of units to scroll.
+The task of peek is to draw in the preview area based on the values of file and skip. This process is asynchronous.
+
+The task of seek is to change the value of skip based on user behavior and trigger peek again. It's synchronous, meaning you can access the context.
+
+There are some preset previewers and preloaders you can refer to: Yazi Preset Plugins
+
+Preloader
+You need to return a table that implements the preload method:
+
+local M = {}
+
+function M:preload(job)
+	-- ...
+	return false, Err("some error")
+end
+
+return M
+
+It receives a job parameter, which is a table:
+
+Key	Description
+area	Rect of the available preview area.
+args	Arguments passed to the preloader.
+file	File to be preloaded.
+skip	Always 0
+And returns a (complete, err):
+
+complete: Required, whether the preloading is complete, which is a boolean.
+true: Marks the task as complete, and the task will not be called again.
+false: Marks the task as incomplete, and the task will be retried until it's complete (returns true).
+err: Optional, the error to be logged.
+When complete = false, the preloader will be re-triggered at the next time point, such as when the user scrolls leading to a page switch. This is usually done for either:
+
+Retrying in case of file loading failure
+Refreshing the file status upon successful loading
+Yazi will automatically invoke the preload concurrently for each file that matches the preload rules on the page.
+
+Sendable value
+Yazi's plugin can run concurrently on multiple threads. For better performance, only the following types of combinations can be used for inter-thread data exchange:
+
+Nil
+Boolean
+Number
+String
+Url
+Table and nested tables, with the above types as values
+Ownership transfer
+Yazi's plugin system inherits Rust's ownership and lifetime concepts.
+
+All userdata are native Rust types that have their own ownership to ensure safe and efficient transfers across different threads, avoiding any memory reallocation overhead. Specifically:
+
+Url
+Passing these userdata to a cross-thread function like ya.emit() transfers ownership. After transfer, the original userdata is no longer available, for example:
+
+local target = Url("/tmp")
+ya.emit("cd", { target })  -- Ownership transferred
+
+ya.dbg(tostring(url)) -- Error: userdata has been destructed
+
+To keep the original, clone a new userdata and pass that instead, but this allocates extra memory - Url() constructor can accept a Url userdata and return a new clone of that Url:
+
+- ya.emit("cd", { target })
++ ya.emit("cd", { Url(target) })
+
+A smarter way is to reverse the order of execution, use the target before it's transferred, to avoid the need for cloning:
+
+local target = Url("/tmp")
+local target_str = tostring(target)
+
+ya.emit("cd", { target })  -- Ownership transferred
+ya.dbg(target_str) -- No error
+
+Debugging
+Please ensure that your ~/.config/yazi/init.lua includes valid Lua code with the correct syntax, otherwise will result in Yazi being unable to parse and execute your init.lua to initialize.
+
+We recommend installing a Lua plugin in your editor for syntax checking to avoid any syntax errors. For example, install the Lua plugin for VSCode, and for Neovim, use nvim-lspconfig to configure your Lua LSP.
+
+If you have no experience with Lua, you can quickly get started through https://learnxinyminutes.com/docs/lua/
+
+Logging
+If you want to debug some runtime data, use ya.dbg() and ya.err() to print what you want to debug to either:
+
+~/.local/state/yazi/yazi.log on Unix-like systems.
+%AppData%\yazi\state\yazi.log on Windows.
+Make sure to set the YAZI_LOG environment variable before starting Yazi:
+
+Unix-like
+PowerShell
+YAZI_LOG=debug yazi
+
+otherwise, no logs will be recorded. Its value can be (in descending order of verbosity):
+
+debug
+info
+warn
+error
+Debugging preset plugins
+Clone the latest source code.
+Go to the yazi-plugin/preset folder and find the plugin you want to debug, make changes, such as logging certain runtime data.
+Build in debug mode and run the yazi binary with an appropriate YAZI_LOG.
+
+
+
+Image Preview
+Yazi has done a lot of work to adapt to different terminals and multiplexers, trying their best to make it out-of-the-box for users.
+
+This is by no means a simple task, to reduce maintenance costs, we only guarantee it is available in the latest version of terminals and multiplexers (tmux, Zellij):
+
+Platform	Protocol	Support
+kitty (>= 0.28.0)	Kitty unicode placeholders	✅ Built-in
+iTerm2	Inline images protocol	✅ Built-in
+WezTerm	Inline images protocol	✅ Built-in
+Konsole	Kitty old protocol	✅ Built-in
+foot	Sixel graphics format	✅ Built-in
+Ghostty	Kitty unicode placeholders	✅ Built-in
+Windows Terminal (>= v1.22.10352.0)	Sixel graphics format	✅ Built-in
+st with Sixel patch	Sixel graphics format	✅ Built-in
+Warp (macOS/Linux only)	Inline images protocol	✅ Built-in
+Tabby	Inline images protocol	✅ Built-in
+VSCode	Inline images protocol	✅ Built-in
+Rio	Inline images protocol	❌ Rio doesn't correctly clear images #709
+Black Box	Sixel graphics format	✅ Built-in
+Hyper	Inline images protocol	✅ Built-in
+Bobcat	Inline images protocol	✅ Built-in
+X11 / Wayland	Window system protocol	☑️ Überzug++ required
+Fallback	ASCII art (Unicode block)	☑️ Chafa required
+Yazi automatically selects the appropriate preview method for you, based on the priority from top to bottom. That's relying on the $TERM, $TERM_PROGRAM, and $XDG_SESSION_TYPE variables, make sure you don't overwrite them by mistake!
+
+For instance, if your terminal is Alacritty, which doesn't support displaying images itself, but you are running on an X11/Wayland environment, it will automatically use the "Window system protocol" to display images - this requires you to have Überzug++ installed.
+
+tmux users
+To enable Yazi's image preview to work correctly in tmux, add the following 3 options to your tmux.conf:
+
+set -g allow-passthrough on
+set -ga update-environment TERM
+set -ga update-environment TERM_PROGRAM
+
+Then restart tmux (important):
+
+tmux kill-server && tmux || tmux
+
+Now you should be able to enjoy with the image preview.
+
+Note that if the protocol you are using is Sixel, make sure you passed --enable-sixel when building tmux, as it's disabled by default. You can verify this through tmux/tmux#4104.
+
+Zellij users
+Zellij currently only supports the Sixel graphics format, so you will need a terminal that also supports Sixel.
+
+Note that, Zellij's Sixel implementation is quite buggy and has serious performance issues at the moment, causing noticeable lagginess when quickly switching between images, and sometimes even image tearing or not working at all.
+
+This situation won't improve until Zellij enhances its Sixel implementation or provides a passthrough mode. If the image is a stronger need to you, consider running Yazi outside of Zellij or using Überzug++:
+
+# Deceive Yazi into thinking you're running in kitty,
+# forcing it fallback to Überzug++ or Chafa
+TERM=xterm-kitty yazi
+
+Windows users
+Currently, only the following 3 terminals support displaying images on Windows:
+
+WezTerm (latest nightly)
+Windows Terminal (>= v1.22.10352.0)
+Bobcat v0.9.0
+Windows with WSL users
+Limited by ConPTY, the Windows edition has had to implement many workarounds, which are not perfect.
+
+However, if you run Yazi in WSL, you can experience perfect image previews through wezterm ssh.
+WezTerm is an excellent terminal that can bypass the limitations of ConPTY through its SSH feature, and it's currently the only terminal that allows this approach.
+
+You need to install sshd in WSL and start it:
+
+sudo apt install openssh-server
+sudo service ssh restart
+
+Then, on the host machine, connect to WSL over SSH:
+
+wezterm ssh 127.0.0.1
+
+That's it! you can now get Yazi's image preview working properly.
+
+Neovim users
+The builtin terminal emulator (:term) in Neovim doesn't support any graphic protocols, so Yazi will try to fallback to X11/Wayland/Chafa in sequence.
+
+Note that Überzug++ might display images in the wrong position; in that case, please adjust it manually using ueberzug_offset.
+
+Why won't my images adapt to terminal size?
+The size of the image depends on two factors:
+
+The max_width and max_height config options, which need to be adjusted by the user as needed.
+The pixel size of the terminal.
+Yazi will use the smaller of these two factors as the image preview size.
+
+However, some terminals (such as VSCode, Tabby, and all Windows terminals) don't implement the ioctl system call, before Add CSI 14 t sequence support is merged, it's not possible to obtain the actual pixel width and height of the terminal.
+
+Hence, only max_width and max_height will be used in this case.
+
+How can I know what image protocol Yazi uses?
+Yazi provides a yazi --debug command that includes all your environment information, such as terminal emulator, image adapter, whether you're in SSH mode, etc.
+
+Run it in the terminal where you want to preview images, and you'll see output like:
+
+...
+Adapter
+    Adapter.matches: Kgp
+...
+
+which indicates the image protocol detected and used by Yazi:
+
+Adapter.matches	Protocol	Notes
+Kgp	Kitty unicode placeholders	Ensure your terminal is up-to-date to support it
+KgpOld	Kitty old protocol	Doesn't work under tmux due to the limitations of the protocol itself
+Iip	Inline images protocol	-
+Sixel	Sixel graphics format	See tmux and Zellij section if you're using either of them
+X11	Window system protocol	Überzug++ is required
+Wayland	Window system protocol	Überzug++ is required and only supports Sway, Hyprland, and Wayfire
+Chafa	ASCII art (Unicode block)	Chafa is required as the last fallback resort
+Why can't I preview images via Überzug++?
+This may be a problem with Überzug++ itself. Please run Yazi in debug mode, then hover on the image that's causing the issue.
+
+Then find the last Überzug++ command in your log file sorted by time, it is usually at the very end of the file and looks like:
+
+ueberzugpp command: {"action":"add","identifier":"yazi","x":96,"y":1,"max_width":400,"max_height":150,"path":"/root/test.jpg"}
+
+
+Finally, run ueberzugpp layer directly in the terminal without and outside Yazi, and paste the command:
+
+{"action":"add","identifier":"yazi","x":96,"y":1,"max_width":400,"max_height":150,"path":"/root/test.jpg"}
+
+
+into it, press Enter, and to see if any image is shown, without exiting the Überzug++.
+
+If the image shows properly when using Überzug++ independently, but not when used with Yazi, please create a bug report with:
+
+The contents of your log file.
+The contents of /tmp/ueberzugpp-$USER.log.
+A GIF demonstration of the above steps.
