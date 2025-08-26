@@ -25,6 +25,12 @@ prepend_previewers = [
 	# Markdown with glow via piper
 	{ name = "*.md", run = 'piper -- ~/go/bin/glow -s auto "$1"' },
 	
+	# DOC/DOCX files - convert to markdown and display with glow
+	{ mime = "application/msword", run = 'piper -- (pandoc "$1" -t gfm --wrap=auto 2>/dev/null | ~/go/bin/glow -s auto) || (antiword "$1" 2>/dev/null | ~/go/bin/glow -s auto) || echo "Nelze načíst DOC soubor"' },
+	{ mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document", run = 'piper -- (pandoc "$1" -t gfm --wrap=auto 2>/dev/null | ~/go/bin/glow -s auto) || echo "Nelze načíst DOCX soubor"' },
+	{ name = "*.doc", run = 'piper -- (pandoc "$1" -t gfm --wrap=auto 2>/dev/null | ~/go/bin/glow -s auto) || (antiword "$1" 2>/dev/null | ~/go/bin/glow -s auto) || echo "Nelze načíst DOC soubor"' },
+	{ name = "*.docx", run = 'piper -- (pandoc "$1" -t gfm --wrap=auto 2>/dev/null | ~/go/bin/glow -s auto) || echo "Nelze načíst DOCX soubor"' },
+	
 	# Archive previewer
 	{ mime = "application/*zip",            run = "ouch" },
 	{ mime = "application/x-tar",           run = "ouch" },
