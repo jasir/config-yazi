@@ -205,3 +205,29 @@ on = ["n"]
 run = "shell 'nano \"$0\"' --block"
 desc = "Open with nano"
 
+# Projects plugin - ukládání a načítání tabů
+[[mgr.prepend_keymap]]
+on = [ "P", "s" ]
+run = "plugin projects save"
+desc = "Save current project"
+
+[[mgr.prepend_keymap]]
+on = [ "P", "l" ]
+run = "plugin projects load"
+desc = "Load project"
+
+[[mgr.prepend_keymap]]
+on = [ "P", "P" ]
+run = "plugin projects load_last"
+desc = "Load last project"
+
+[[mgr.prepend_keymap]]
+on = [ "P", "d" ]
+run = "plugin projects delete"
+desc = "Delete project"
+
+[[mgr.prepend_keymap]]
+on = [ "q" ]
+run = "plugin projects quit"
+desc = "Save last project and exit"
+

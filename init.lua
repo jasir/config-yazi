@@ -107,3 +107,15 @@ require("whoosh"):setup {
 
 require("folder-rules"):setup()
 
+-- Projects plugin - ukládání a načítání tabů
+require("projects"):setup({
+    save = {
+        method = "lua", -- yazi | lua (load_after_start funguje pouze s lua metodou!)
+    },
+    last = {
+        update_after_save = true,
+        update_after_load = true,
+        load_after_start = true, -- pokud chceš automaticky načíst při spuštění, nastav na true
+    },
+})
+
