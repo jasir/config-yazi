@@ -115,7 +115,7 @@ require("projects"):setup({
     last = {
         update_after_save = true,
         update_after_load = true,
-        load_after_start = true, -- pokud chceš automaticky načíst při spuštění, nastav na true
+        load_after_start = false, -- pokud chceš automaticky načíst při spuštění, nastav na true
     },
 })
 
