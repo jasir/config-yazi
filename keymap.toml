@@ -86,14 +86,16 @@ run  = "cd /c/work/projects/altisima-central-vault/__home/projects/ai/brain/"
 desc = "Go to brain directory"
 
 [[mgr.prepend_keymap]]
-on   = [ "g", "b" ]
-run  = "cd /c/work/projects/altisima-central-vault/__home/projects/ai/brain/"
-desc = "Go to brain directory"
+on   = [ "g", "m" ]
+run  = "cd /mnt"
+desc = "Go /mnt"
+
+
 
 [[mgr.prepend_keymap]]
 on   = [ "g", "f" ]
 run  = "cd /home/jarda/k3w-docker/src/web-frontend/apps/web"
-desc = "Go to brain directory"
+desc = "Go to frontend directory"
 
 # bookmarks
 
