@@ -233,3 +233,8 @@ on = [ "q" ]
 run = "plugin projects quit"
 desc = "Save last project and exit"
 
+[[mgr.prepend_keymap]]
+on = ["<Insert>"]
+run = [ "toggle", "arrow next" ]
+desc = "Toggle the current selection state (same as Space)"
+
