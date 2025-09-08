@@ -78,5 +78,25 @@ use = "yazi-rs/plugins:smart-filter"
 rev = "de53d90"
 hash = "e56b7abf3c06e8ce496eadcca168c093"
 
+[[plugin.deps]]
+use = "Rolv-Apneseth/starship"
+rev = "a63550b"
+hash = "c2021386289a0cbb3e152a052f67c177"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:types"
+rev = "d7588f6"
+hash = "1e047e1b13b5e3fc6ab1f5d0d04a14e2"
+
+[[plugin.deps]]
+use = "AnirudhG07/custom-shell"
+rev = "b04213d"
+hash = "3efc7ddc9bac120c618462eb994edf75"
+
+[[plugin.deps]]
+use = "boydaihungst/save-clipboard-to-file"
+rev = "40de82f"
+hash = "f79197930f23924827e81fa51a1413d0"
+
 [flavor]
 deps = []
