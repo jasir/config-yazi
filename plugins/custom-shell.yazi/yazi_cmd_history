@@ -1,3 +1,0 @@
-bash -ic 'g;exit'
-bash -ic 'claude;exit'
-bash -ic 'git diff;exit'

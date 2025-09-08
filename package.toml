@@ -98,5 +98,10 @@ use = "boydaihungst/save-clipboard-to-file"
 rev = "40de82f"
 hash = "f79197930f23924827e81fa51a1413d0"
 
+[[plugin.deps]]
+use = "yazi-rs/plugins:toggle-pane"
+rev = "d7588f6"
+hash = "d6f60c24d8c0cf57a855bf46115b2502"
+
 [flavor]
 deps = []

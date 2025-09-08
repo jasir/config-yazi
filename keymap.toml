@@ -268,3 +268,10 @@ desc = "custom-shell as default, interactive, block"
 on = ["c", "P"]
 run = "plugin save-clipboard-to-file"
 desc = "Paste clipboard content to file"
+
+# preview toggle
+
+[[mgr.prepend_keymap]]
+on = "T"
+run = "plugin toggle-pane max-preview"
+desc = "Maximize or restore the preview pane"
