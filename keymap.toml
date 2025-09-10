@@ -224,22 +224,22 @@ desc = "Open with nvim"
 
 # Projects plugin - ukládání a načítání tabů
 [[mgr.prepend_keymap]]
-on = ["P", "s"]
+on = ["|", "s"]
 run = "plugin projects save"
 desc = "Save current project"
 
 [[mgr.prepend_keymap]]
-on = ["P", "l"]
+on = ["|", "l"]
 run = "plugin projects load"
 desc = "Load project"
 
 [[mgr.prepend_keymap]]
-on = ["P", "P"]
+on = ["|", "P"]
 run = "plugin projects load_last"
 desc = "Load last project"
 
 [[mgr.prepend_keymap]]
-on = ["P", "d"]
+on = ["|", "d"]
 run = "plugin projects delete"
 desc = "Delete project"
 
