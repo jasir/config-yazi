@@ -9,6 +9,8 @@ ratio = [1, 3, 4]
 nvim = [{ run = 'nvim "$@"', block = true, desc = "Open with Neovim" }]
 nano = [{ run = 'nano "$@"', block = true, desc = "Open with Nano" }]
 code = [{ run = 'code "$@"', orphan = true, desc = "Open with VS Code" }]
+cursor = [{ run = 'cursor "$@"', orphan = true, desc = "Open with Cursor" }]
+phpstorm = [{ run = 'phpstorm "$@"', orphan = true, desc = "Open with PhpStorm" }]
 
 # Image viewers
 feh = [{ run = 'feh "$@"', orphan = true, desc = "Open with feh" }]
@@ -26,15 +28,18 @@ extract = [{ run = 'ouch decompress "$@"', desc = "Extract with ouch" }]
 [open]
 prepend_rules = [
   # Text files - přidání vlastních editorů k výchozím
-  { mime = "text/*", use = ["nvim", "nano", "code"] },
-  { name = "*.md", use = ["nvim", "nano", "code"] },
-  { name = "*.toml", use = ["nvim", "nano", "code"] },
-  { name = "*.json", use = ["nvim", "nano", "code"] },
-  { name = "*.lua", use = ["nvim", "nano", "code"] },
-  { name = "*.rs", use = ["nvim", "nano", "code"] },
-  { name = "*.py", use = ["nvim", "nano", "code"] },
-  { name = "*.js", use = ["nvim", "nano", "code"] },
-  { name = "*.ts", use = ["nvim", "nano", "code"] },
+  { mime = "text/*", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  { name = "*.md", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  { name = "*.toml", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  { name = "*.json", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  { name = "*.lua", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  { name = "*.rs", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  { name = "*.py", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  { name = "*.js", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  { name = "*.ts", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  { name = "*.php", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
+  # Mindmap files - přidání nvim jako editor
+  { name = "*.mm", use = ["nvim", "cursor", "phpstorm", "nano", "code"] },
 ]
 
 append_rules = [
