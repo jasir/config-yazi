@@ -6,6 +6,13 @@ local function fail(content) return ya.notify { title = "VCS Files", content = c
 
 local function entry()
 	local root = root()
+
+	-- Skip /mnt/ directories - git operations are slow there (NTFS/SSHFS mounts)
+	local root_str = tostring(root)
+	if root_str:match("^/mnt/") then
+		return fail("Git operations are disabled in /mnt/ directories (slow NTFS/SSHFS mounts)")
+	end
+
 	local output, err = Command("git"):cwd(tostring(root)):arg({ "diff", "--name-only", "HEAD" }):output()
 	if err then
 		return fail("Failed to run `git diff`, error: " .. err)

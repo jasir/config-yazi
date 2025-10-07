@@ -51,6 +51,12 @@ end
 ---@param cwd Url
 ---@return string?
 local function root(cwd)
+	-- Skip /mnt/ directories - git operations are slow there (NTFS/SSHFS mounts)
+	local cwd_str = tostring(cwd)
+	if cwd_str:match("^/mnt/") then
+		return nil
+	end
+
 	local is_worktree = function(url)
 		local file, head = io.open(tostring(url)), nil
 		if file then
@@ -209,6 +215,13 @@ end
 ---@type UnstableFetcher
 local function fetch(_, job)
 	local cwd = job.files[1].url.base
+
+	-- Skip /mnt/ directories - git operations are slow there (NTFS/SSHFS mounts)
+	local cwd_str = tostring(cwd)
+	if cwd_str:match("^/mnt/") then
+		return true
+	end
+
 	local repo = root(cwd)
 	if not repo then
 		remove(tostring(cwd))
